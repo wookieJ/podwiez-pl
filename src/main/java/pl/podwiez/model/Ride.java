@@ -3,12 +3,14 @@ package pl.podwiez.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.Time;
 
 @Document(collection = "rides")
+@XmlRootElement
 public class Ride {
     @Id
-    public String id;
+    public long id;
 
     private String fromPlace;
     private String toPlace;

@@ -12,5 +12,4 @@ public class PodwiezApplicationTests {
 	@Test
 	public void contextLoads() {
 	}
-
 }
