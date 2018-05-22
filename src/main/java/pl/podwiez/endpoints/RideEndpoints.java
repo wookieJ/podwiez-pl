@@ -18,6 +18,8 @@ public class RideEndpoints {
     @Autowired
     private RideRepository rideRepository;
 
+    private static long generatedValue = 1;
+
     /**
      * Getting all rides in service
      *
@@ -41,6 +43,7 @@ public class RideEndpoints {
      */
     @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<Ride> getCity(@RequestBody Ride ride) {
+        ride.setId(generatedValue++);
         rideRepository.save(ride);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(0).toUri();
         return ResponseEntity.created(location).body(ride);
