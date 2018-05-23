@@ -13,6 +13,20 @@ public class IdGeneratorServiceImpl implements IdGeneratorService {
     @Autowired
     private IdGeneratorRepository idGeneratorRepository;
 
+    private long updateRideId() throws IdGeneratorExistsException{
+        List<IdGenerator> idGeneratorList = idGeneratorRepository.findAll();
+        if (idGeneratorList.isEmpty()) {
+            throw new IdGeneratorExistsException("There is no id generator in database!");
+        }
+        IdGenerator idGenerator = idGeneratorList.get(0);
+        idGeneratorRepository.deleteAll();
+        long newRideIdValue = idGenerator.getRideId() + 1;
+        idGenerator.setRideId(newRideIdValue);
+        idGeneratorRepository.save(idGenerator);
+
+        return newRideIdValue;
+    }
+
     /**
      * Generating new ride's id value
      *
@@ -20,18 +34,52 @@ public class IdGeneratorServiceImpl implements IdGeneratorService {
      * @throws IdGeneratorExistsException throwing when there is no service's id generator in database
      */
     @Override
-    public long generateRideId() throws IdGeneratorExistsException {
+    public long generateRideId() {
+        long newRideIdValue = 0;
+        try {
+            newRideIdValue = updateRideId();
+        } catch (IdGeneratorExistsException e) {
+            implementIdGenerator();
+        }
+
+        return newRideIdValue;
+    }
+
+    /**
+     * Updating account id in id generator
+     *
+     * @return new unique account id value
+     * @throws IdGeneratorExistsException throwing when there is no generator in service database
+     */
+    private long updateAccountId() throws IdGeneratorExistsException {
         List<IdGenerator> idGeneratorList = idGeneratorRepository.findAll();
         if (idGeneratorList.isEmpty()) {
             throw new IdGeneratorExistsException("There is no id generator in database!");
         }
         IdGenerator idGenerator = idGeneratorList.get(0);
         idGeneratorRepository.deleteAll();
-        long newIdValue = idGenerator.getRideId() + 1;
-        idGenerator.setRideId(newIdValue);
+        long newAccountIdValue = idGenerator.getAccountId() + 1;
+        idGenerator.setAccountId(newAccountIdValue);
         idGeneratorRepository.save(idGenerator);
 
-        return newIdValue;
+        return newAccountIdValue;
+    }
+
+    /**
+     * Generating new unique account id value
+     *
+     * @return new unique account id value
+     */
+    @Override
+    public long generateAccountId() {
+        long newAccountIdValue = 0;
+        try {
+            newAccountIdValue = updateAccountId();
+        } catch (IdGeneratorExistsException e) {
+            implementIdGenerator();
+        }
+
+        return newAccountIdValue;
     }
 
     /**

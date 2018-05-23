@@ -1,6 +1,9 @@
 package pl.podwiez.model;//package pl.podwiez.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotEmpty;
@@ -9,7 +12,12 @@ import javax.validation.constraints.NotNull;
 @Document(collection = "accounts")
 public class Account {
     @Id
-    private String id;
+    @JsonIgnore
+    private ObjectId _id;
+
+    @JsonIgnore
+    @Indexed(name = "id", unique = true)
+    public long id;
 
     @NotNull
     @NotEmpty
@@ -18,6 +26,8 @@ public class Account {
     @NotNull
     @NotEmpty
     private String password;
+
+    @JsonIgnore
     private String passwordConfirm;
 
     public Account() {
@@ -28,11 +38,19 @@ public class Account {
         this.password = password;
     }
 
-    public String getId() {
+    public ObjectId get_id() {
+        return _id;
+    }
+
+    public void set_id(ObjectId _id) {
+        this._id = _id;
+    }
+
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -62,6 +80,6 @@ public class Account {
 
     @Override
     public String toString() {
-        return "Account{" + "id='" + id + '\'' + ", email='" + email + '\'' + ", password='" + password + '\'' + '}';
+        return "Account{" + "_id=" + _id + ", id=" + id + ", email='" + email + '\'' + ", password='" + password + '\'' + ", passwordConfirm='" + passwordConfirm + '\'' + '}';
     }
 }

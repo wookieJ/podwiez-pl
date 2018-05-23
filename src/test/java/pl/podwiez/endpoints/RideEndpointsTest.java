@@ -1,14 +1,14 @@
 package pl.podwiez.endpoints;
 
 import org.junit.Before;
-import pl.podwiez.endpoint.RideEndpoints;
+import pl.podwiez.endpoint.RideEndpoint;
 
 public class RideEndpointsTest {
-    RideEndpoints rideEndpoints;
+    RideEndpoint rideEndpoints;
 
     @Before
     public void setUp() {
-        rideEndpoints = new RideEndpoints();
+        rideEndpoints = new RideEndpoint();
     }
 
 //    @Test
