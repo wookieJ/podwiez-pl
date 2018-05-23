@@ -9,11 +9,11 @@ import java.util.Collection;
 /**
  * Account decorator with additional account parameters
  */
-public class SecUserDetails implements UserDetails {
+public class SecAccountDetails implements UserDetails {
 
     private Account account;
 
-    public SecUserDetails(Account user) {
+    public SecAccountDetails(Account user) {
         this.account = user;
     }
 

@@ -6,6 +6,6 @@ import pl.podwiez.model.Account;
 /**
  * Account repository pattern for CRUD operation on MongoDB
  */
-public interface AccountRepository extends MongoRepository<Account, Long> {
+public interface AccountRepository extends MongoRepository<Account, String> {
     Account findFirstByEmail(String email);
 }

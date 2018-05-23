@@ -1,13 +1,14 @@
-package pl.podwiez.endpoints;
+package pl.podwiez.endpoint;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import pl.podwiez.exception.IdGeneratorExistsException;
 import pl.podwiez.model.Ride;
 import pl.podwiez.repositories.RideRepository;
+import pl.podwiez.service.IdGeneratorService;
 
 import java.net.URI;
 import java.util.List;
@@ -18,7 +19,8 @@ public class RideEndpoints {
     @Autowired
     private RideRepository rideRepository;
 
-    private static long generatedValue = 1;
+    @Autowired
+    private IdGeneratorService idGeneratorService;
 
     /**
      * Getting all rides in service
@@ -42,10 +44,17 @@ public class RideEndpoints {
      * @return ride we added to service
      */
     @PostMapping()
-    public ResponseEntity<Ride> getCity(@RequestBody Ride ride) {
-        ride.setId(generatedValue++);
+    public ResponseEntity<Ride> addRide(@RequestBody Ride ride) {
+        long newIdValue = 0;
+        try {
+            newIdValue = idGeneratorService.generateRideId();
+        } catch (IdGeneratorExistsException e) {
+            e.printStackTrace();
+            idGeneratorService.implementIdGenerator();
+        }
+        ride.setId(newIdValue);
         rideRepository.save(ride);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(0).toUri();
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newIdValue).toUri();
         return ResponseEntity.created(location).body(ride);
     }
 }

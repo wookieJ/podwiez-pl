@@ -17,9 +17,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationEntryPoint authEntryPoint;
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests().anyRequest().authenticated().and().httpBasic().authenticationEntryPoint(authEntryPoint);
+    @Autowired
+    SecAccountDetailsService userDetailsService ;
+
+    @Autowired
+    public void configAuthBuilder(AuthenticationManagerBuilder builder) throws Exception {
+        builder.userDetailsService(userDetailsService);
     }
 
     @Bean
@@ -27,11 +30,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Autowired
-    SecUserDetailsService userDetailsService ;
-
-    @Autowired
-    public void configAuthBuilder(AuthenticationManagerBuilder builder) throws Exception {
-        builder.userDetailsService(userDetailsService);
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.csrf().disable().authorizeRequests().anyRequest().authenticated().and().httpBasic().authenticationEntryPoint(authEntryPoint);
     }
 }

@@ -1,6 +1,7 @@
 package pl.podwiez.endpoints;
 
 import org.junit.Before;
+import pl.podwiez.endpoint.RideEndpoints;
 
 public class RideEndpointsTest {
     RideEndpoints rideEndpoints;
