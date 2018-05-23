@@ -12,15 +12,12 @@ import javax.xml.bind.annotation.XmlTransient;
 import java.sql.Time;
 
 @Document(collection = "rides")
-@XmlRootElement
 public class Ride {
     @Id
     @JsonIgnore
-    @XmlTransient
     private ObjectId _id;
 
     @JsonIgnore
-    @XmlTransient
     @Indexed(name = "id", unique = true)
     public long id;
 
@@ -37,7 +34,6 @@ public class Ride {
     private Time arrivalTime;
     private double amount;
 
-    @XmlTransient
     public ObjectId get_id() {
         return _id;
     }
@@ -46,7 +42,6 @@ public class Ride {
         this._id = _id;
     }
 
-    @XmlTransient
     public long getId() {
         return id;
     }

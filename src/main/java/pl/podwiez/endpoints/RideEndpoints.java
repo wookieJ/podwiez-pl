@@ -25,7 +25,7 @@ public class RideEndpoints {
      *
      * @return all rides in service
      */
-    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @GetMapping()
     public ResponseEntity<List<Ride>> getAllRides() {
         List<Ride> allRides = rideRepository.findAll();
         if (!allRides.isEmpty()) {
@@ -41,7 +41,7 @@ public class RideEndpoints {
      * @param ride ride we want to add
      * @return ride we added to service
      */
-    @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @PostMapping()
     public ResponseEntity<Ride> getCity(@RequestBody Ride ride) {
         ride.setId(generatedValue++);
         rideRepository.save(ride);
