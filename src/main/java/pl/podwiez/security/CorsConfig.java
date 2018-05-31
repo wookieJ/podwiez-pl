@@ -11,6 +11,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 public class CorsConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins("http://localhost:3000", "https://localhost:3000", "http://localhost:8080", "https://localhost:8080").allowedMethods("PUT", "GET", "DELETE", "POST");
+        registry.addMapping("/**").allowedOrigins("http://localhost:3000", "https://localhost:3000", "http://localhost:8080", "https://localhost:8080").allowedMethods("PUT", "GET", "DELETE", "POST", "OPTIONS");
     }
 }
