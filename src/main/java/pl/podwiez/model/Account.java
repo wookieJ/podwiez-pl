@@ -1,6 +1,7 @@
 package pl.podwiez.model;//package pl.podwiez.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -21,10 +22,19 @@ public class Account {
 
     @NotNull
     @NotEmpty
+    private String firstName;
+
+    @NotNull
+    @NotEmpty
+    private String lastName;
+
+    @NotNull
+    @NotEmpty
     private String email;
 
     @NotNull
     @NotEmpty
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @JsonIgnore
@@ -33,8 +43,10 @@ public class Account {
     public Account() {
     }
 
-    public Account(String username, String password) {
-        this.email = username;
+    public Account(String firstName, String lastName, String email, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
         this.password = password;
     }
 
@@ -52,6 +64,22 @@ public class Account {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
