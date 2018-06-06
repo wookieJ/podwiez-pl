@@ -1,18 +1,22 @@
 package pl.podwiez.endpoints;
 
-import org.junit.Before;
-import pl.podwiez.endpoint.RideEndpoint;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.junit.Test;
+
+import java.io.IOException;
+
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertThat;
 
 public class RideEndpointsTest {
-    RideEndpoint rideEndpoints;
-
-    @Before
-    public void setUp() {
-        rideEndpoints = new RideEndpoint();
+    @Test
+    public void getWithoutAuthorizationThen401Expected() throws IOException {
+        HttpUriRequest request = new HttpGet("http://localhost:8080/rides/");
+        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
+        assertThat(httpResponse.getStatusLine().getStatusCode(), equalTo(401));
     }
-
-//    @Test
-//    public void getAllRidesOkStatusTest() throws Exception {
-//        Assert.assertThat(rideEndpoints.getAllRides().getStatusCode(), is(HttpStatus.OK));
-//    }
 }

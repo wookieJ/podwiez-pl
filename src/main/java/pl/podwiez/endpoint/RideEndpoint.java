@@ -52,14 +52,13 @@ public class RideEndpoint {
     @GetMapping(value = "/user")
     public ResponseEntity<List<Ride>> getUserRides(@RequestHeader("Cookie") String cookie, HttpServletRequest httpServletRequest) {
         String sessionId = "JSESSIONID=" + httpServletRequest.getRequestedSessionId();
-        System.out.println(sessionId + " : " + cookie);
         if (sessionId.equals(cookie)) {
             String email = httpServletRequest.getUserPrincipal().getName();
             List<Ride> userRides = rideRepository.findAllByAccount(accountRepository.findFirstByEmail(email));
             if (userRides != null)
                 return ResponseEntity.ok(userRides);
         } else
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(401).build();
         return null;
     }
 
@@ -71,13 +70,10 @@ public class RideEndpoint {
      */
     @PostMapping()
     public ResponseEntity<Ride> addRide(@RequestBody Ride ride, @RequestHeader("Cookie") String cookie, HttpServletRequest httpServletRequest) {
-        System.out.println("POST with body: " + ride);
-//        String sessionId = "JSESSIONID=" + httpServletRequest.getRequestedSessionId();
-//        if (sessionId.equals(cookie)) {
+        String sessionId = "JSESSIONID=" + httpServletRequest.getRequestedSessionId();
+        if (sessionId.equals(cookie)) {
             String email = httpServletRequest.getUserPrincipal().getName();
-            System.out.println(email);
             Account account = accountRepository.findFirstByEmail(email);
-            System.out.println(account);
             ride.setAccount(account);
 
             long newRideIdValue = idGeneratorService.generateRideId();
@@ -85,8 +81,8 @@ public class RideEndpoint {
             rideRepository.save(ride);
             URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newRideIdValue).toUri();
             return ResponseEntity.created(location).body(ride);
-//        }
+        }
 
-//        return ResponseEntity.status(200).build();
+        return ResponseEntity.status(401).build();
     }
 }
