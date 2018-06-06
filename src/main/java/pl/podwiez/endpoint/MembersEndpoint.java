@@ -14,6 +14,7 @@ import pl.podwiez.repositories.RideRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/rides/{id}")
@@ -25,7 +26,7 @@ public class MembersEndpoint {
     AccountRepository accountRepository;
 
     /**
-     * Getting member of ride
+     * Getting all members of ride
      *
      * @param id ride's id
      * @return ride's members
@@ -70,5 +71,27 @@ public class MembersEndpoint {
             return ResponseEntity.ok(members);
         } else
             return ResponseEntity.status(401).build();
+    }
+
+    /**
+     * Deleting one member of ride
+     *
+     * @param id       id of ride
+     * @param memberId id of member
+     * @return member of ride
+     */
+    @DeleteMapping(value = "/members/{memberId}")
+    public ResponseEntity<List<Account>> deleteMemberById(@PathVariable(value = "id") Long id, @PathVariable(value = "memberId") Long memberId) {
+        Ride ride = rideRepository.findFirstById(id);
+        List<Account> members;
+        if (ride != null) {
+            members = ride.getMembers();
+            members = members.stream().filter(e -> e.getId() != memberId).collect(Collectors.toList());
+            ride.setMembers(members);
+            rideRepository.save(ride);
+            return ResponseEntity.ok(members);
+        }
+
+        return ResponseEntity.notFound().build();
     }
 }

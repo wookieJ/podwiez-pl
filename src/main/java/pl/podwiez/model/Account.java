@@ -16,7 +16,6 @@ public class Account {
     @JsonIgnore
     private ObjectId _id;
 
-    @JsonIgnore
     @Indexed(name = "id", unique = true)
     public long id;
 
