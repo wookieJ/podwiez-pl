@@ -8,4 +8,5 @@ import pl.podwiez.model.Account;
  */
 public interface AccountRepository extends MongoRepository<Account, String> {
     Account findFirstByEmail(String email);
+    Account findFirstById(Long id);
 }

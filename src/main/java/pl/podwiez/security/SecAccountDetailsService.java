@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import pl.podwiez.exception.EmailExistsException;
 import pl.podwiez.model.Account;
 import pl.podwiez.repositories.AccountRepository;
+import pl.podwiez.service.AccountService;
 
 @Component
 public class SecAccountDetailsService implements UserDetailsService, AccountService {

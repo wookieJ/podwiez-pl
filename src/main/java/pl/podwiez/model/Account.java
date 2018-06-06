@@ -108,6 +108,6 @@ public class Account {
 
     @Override
     public String toString() {
-        return "Account{" + "_id=" + _id + ", id=" + id + ", email='" + email + '\'' + ", password='" + password + '\'' + ", passwordConfirm='" + passwordConfirm + '\'' + '}';
+        return "Account{" + "id=" + id + ", firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' + ", email='" + email + '\'' + ", password='" + password + '\'' + '}';
     }
 }
