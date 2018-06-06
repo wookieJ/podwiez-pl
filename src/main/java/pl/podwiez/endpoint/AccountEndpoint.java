@@ -21,7 +21,7 @@ public class AccountEndpoint {
     @Autowired
     private IdGeneratorService idGeneratorService;
 
-    @GetMapping(value = "/user")
+    @GetMapping(value = "/myAccount")
     public ResponseEntity<Account> getAccount(@RequestHeader("Cookie") String cookie, HttpServletRequest httpServletRequest) {
         String sessionId = "JSESSIONID=" + httpServletRequest.getRequestedSessionId();
         if (sessionId.equals(cookie)) {
@@ -51,7 +51,7 @@ public class AccountEndpoint {
         return null;
     }
 
-    @PutMapping(value = "/user")
+    @PutMapping(value = "/myAccount")
     public ResponseEntity<Account> editAccount(@RequestBody Account account, @RequestHeader("Cookie") String cookie, HttpServletRequest httpServletRequest) {
         String sessionId = "JSESSIONID=" + httpServletRequest.getRequestedSessionId();
         if (sessionId.equals(cookie)) {

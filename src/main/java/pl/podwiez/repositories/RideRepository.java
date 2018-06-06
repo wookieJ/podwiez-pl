@@ -11,4 +11,5 @@ import java.util.List;
  */
 public interface RideRepository extends MongoRepository<Ride, Long> {
     List<Ride> findAllByAccount(Account account);
+    Ride findFirstById(Long id);
 }

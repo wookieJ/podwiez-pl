@@ -3,15 +3,16 @@ package pl.podwiez.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Reference;
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import pl.podwiez.exception.CannotParticipateTwiceOnRide;
+import pl.podwiez.exception.CannotParticipateYourOwnRide;
+import pl.podwiez.exception.NoAvailablePlacesInRide;
 
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import java.sql.Time;
+import java.util.ArrayList;
+import java.util.List;
 
 @Document(collection = "rides")
 public class Ride {
@@ -19,12 +20,14 @@ public class Ride {
     @JsonIgnore
     private ObjectId _id;
 
-    @JsonIgnore
     @Indexed(name = "id", unique = true)
     public long id;
 
     @DBRef
     private Account account;
+
+    @DBRef
+    private List<Account> members;
     private String fromPlace;
     private String toPlace;
     private boolean monRide;
@@ -37,6 +40,7 @@ public class Ride {
     private Time departureTime;
     private Time arrivalTime;
     private double amount;
+    private int availablePlaces;
 
     public ObjectId get_id() {
         return _id;
@@ -52,6 +56,14 @@ public class Ride {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public List<Account> getMembers() {
+        return members;
+    }
+
+    public void setMembers(List<Account> members) {
+        this.members = members;
     }
 
     public Account getAccount() {
@@ -158,10 +170,20 @@ public class Ride {
         this.amount = amount;
     }
 
-    public Ride() {
+    public int getAvailablePlaces() {
+        return availablePlaces;
     }
 
-    public Ride(String fromPlace, String toPlace, boolean monRide, boolean tueRide, boolean wedRide, boolean thuRide, boolean friRide, boolean satRide, boolean sunRide, Time departureTime, Time arrivalTime, double amount) {
+    public void setAvailablePlaces(int availablePlaces) {
+        this.availablePlaces = availablePlaces;
+    }
+
+    public Ride() {
+        this.members = new ArrayList<>();
+    }
+
+    public Ride(String fromPlace, String toPlace, boolean monRide, boolean tueRide, boolean wedRide, boolean thuRide, boolean friRide, boolean satRide, boolean sunRide, Time departureTime, Time arrivalTime, double amount, int availablePlaces) {
+        this.members = new ArrayList<>();
         this.fromPlace = fromPlace;
         this.toPlace = toPlace;
         this.monRide = monRide;
@@ -174,10 +196,36 @@ public class Ride {
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
         this.amount = amount;
+        this.availablePlaces = availablePlaces;
     }
 
     @Override
     public String toString() {
-        return "Ride{" + "fromPlace='" + fromPlace + '\'' + ", toPlace='" + toPlace + '\'' + ", departureTime=" + departureTime + ", arrivalTime=" + arrivalTime + ", amount=" + amount + '}';
+        return "Ride{" + "id=" + id + ", account=" + account + ", members=" + members + ", fromPlace='" + fromPlace + '\'' + ", toPlace='" + toPlace + '\'' + ", monRide=" + monRide + ", tueRide=" + tueRide + ", wedRide=" + wedRide + ", thuRide=" + thuRide + ", friRide=" + friRide + ", satRide=" + satRide + ", sunRide=" + sunRide + ", departureTime=" + departureTime + ", arrivalTime=" + arrivalTime + ", amount=" + amount + ", availablePlaces=" + availablePlaces + '}';
+    }
+
+    /**
+     * Adding account reference to members list and decreasing available amount places
+     *
+     * @param account account we want to add
+     * @return account we added to members of this ride
+     * @throws NoAvailablePlacesInRide      throwing when there are no available places in car
+     * @throws CannotParticipateYourOwnRide throwing when try to be member in own ride
+     * @throws CannotParticipateTwiceOnRide throwing when try to be member twice in same ride
+     */
+    public Account addToMembers(Account account) throws NoAvailablePlacesInRide, CannotParticipateYourOwnRide, CannotParticipateTwiceOnRide {
+        if (getAccount().getEmail().equals(account.getEmail())) {
+            System.out.println("You try to participate on your own ride!");
+            throw new CannotParticipateYourOwnRide("You try to participate on your own ride!");
+        }
+        if (members.stream().anyMatch(e -> e.get_id().equals(account.get_id()))) {
+            System.out.println("You are already member of this ride!");
+            throw new CannotParticipateTwiceOnRide("You are already member of this ride!");
+        }
+        if (availablePlaces < 1)
+            throw new NoAvailablePlacesInRide("There is no places in car!");
+        members.add(account);
+        availablePlaces--;
+        return account;
     }
 }

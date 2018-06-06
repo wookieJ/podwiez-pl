@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.List;
 
-@EnableWebMvc
 @RestController
 @RequestMapping("/rides")
 public class RideEndpoint {
@@ -51,7 +50,7 @@ public class RideEndpoint {
      * @param httpServletRequest httpServlet to check if session is registered
      * @return list of user's rides
      */
-    @GetMapping(value = "/user")
+    @GetMapping(value = "/myRides")
     public ResponseEntity<List<Ride>> getUserRides(@RequestHeader("Cookie") String cookie, HttpServletRequest httpServletRequest) {
         String sessionId = "JSESSIONID=" + httpServletRequest.getRequestedSessionId();
         if (sessionId.equals(cookie)) {
