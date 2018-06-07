@@ -27,10 +27,10 @@ public class AccountEndpoint {
         if (sessionId.equals(cookie)) {
             String email = httpServletRequest.getUserPrincipal().getName();
             Account existingAccount = accountRepository.findFirstByEmail(email);
-            if (existingAccount != null)
+//            if (existingAccount != null)
                 return ResponseEntity.ok(existingAccount);
-            else
-                return ResponseEntity.notFound().build();
+//            else
+//                return ResponseEntity.notFound().build();
         } else
             return ResponseEntity.status(401).build();
     }
@@ -45,10 +45,9 @@ public class AccountEndpoint {
                 URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newAccountIdValue).toUri();
                 return ResponseEntity.created(location).body(account);
             } else
-                return ResponseEntity.noContent().build();
+                return ResponseEntity.unprocessableEntity().build();
         } else
-            ResponseEntity.status(HttpStatus.CONFLICT);
-        return null;
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
     @PutMapping(value = "/myAccount")
@@ -57,7 +56,7 @@ public class AccountEndpoint {
         if (sessionId.equals(cookie)) {
             String email = httpServletRequest.getUserPrincipal().getName();
             Account existingAccount = accountRepository.findFirstByEmail(email);
-            if (existingAccount != null) {
+//            if (existingAccount != null) {
                 existingAccount.setFirstName(account.getFirstName());
                 existingAccount.setLastName(account.getLastName());
                 existingAccount.setEmail(account.getEmail());
@@ -65,8 +64,8 @@ public class AccountEndpoint {
                 accountRepository.save(existingAccount);
 
                 return ResponseEntity.ok(existingAccount);
-            } else
-                return ResponseEntity.notFound().build();
+//            } else
+//                return ResponseEntity.notFound().build();
         } else
             return ResponseEntity.status(401).build();
     }
