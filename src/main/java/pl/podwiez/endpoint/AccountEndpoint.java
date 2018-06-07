@@ -37,17 +37,17 @@ public class AccountEndpoint {
 
     @PostMapping()
     public ResponseEntity<Account> addAccount(@RequestBody Account account) {
-        if (accountRepository.findFirstByEmail(account.getEmail()) != null) {
-            if (account.getEmail() != null && account.getPassword() != null && !account.getEmail().isEmpty() && !account.getPassword().isEmpty()) {
+//        if (accountRepository.findFirstByEmail(account.getEmail()) != null) {
+//            if (account.getEmail() != null && account.getPassword() != null && !account.getEmail().isEmpty() && !account.getPassword().isEmpty()) {
                 long newAccountIdValue = idGeneratorService.generateAccountId();
                 account.setId(newAccountIdValue);
                 accountRepository.save(account);
                 URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newAccountIdValue).toUri();
                 return ResponseEntity.created(location).body(account);
-            } else
-                return ResponseEntity.unprocessableEntity().build();
-        } else
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+//            } else
+//                return ResponseEntity.unprocessableEntity().build();
+//        } else
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
     @PutMapping(value = "/myAccount")
