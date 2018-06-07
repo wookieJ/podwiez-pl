@@ -56,10 +56,10 @@ public class RideEndpoint {
 //        if (sessionId.equals(cookie)) {
             String email = httpServletRequest.getUserPrincipal().getName();
             List<Ride> userRides = rideRepository.findAllByAccount(accountRepository.findFirstByEmail(email));
-            if (userRides != null)
+//            if (userRides != null)
                 return ResponseEntity.ok(userRides);
 //        } else
-            return ResponseEntity.status(401).build();
+//            return ResponseEntity.status(401).build();
 //        return null;
     }
 
