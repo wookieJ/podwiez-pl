@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.podwiez.exception.CannotParticipateTwiceOnRide;
 import pl.podwiez.exception.CannotParticipateYourOwnRide;
 import pl.podwiez.exception.NoAvailablePlacesInRide;
@@ -13,6 +14,7 @@ import pl.podwiez.repositories.AccountRepository;
 import pl.podwiez.repositories.RideRepository;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,7 +53,7 @@ public class MembersEndpoint {
      * @return list of ride's members
      */
     @PostMapping(value = "/members")
-    public ResponseEntity<List<Account>> addMember(@PathVariable(value = "id") Long id, @RequestHeader("Cookie") String cookie, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<Account> addMember(@PathVariable(value = "id") Long id, @RequestHeader("Cookie") String cookie, HttpServletRequest httpServletRequest) {
         String sessionId = "JSESSIONID=" + httpServletRequest.getRequestedSessionId();
         if (sessionId.equals(cookie)) {
             String email = httpServletRequest.getUserPrincipal().getName();
@@ -60,15 +62,15 @@ public class MembersEndpoint {
             try {
                 ride.addToMembers(account);
             } catch (NoAvailablePlacesInRide noAvailablePlacesInRide) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+                return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
             } catch (CannotParticipateYourOwnRide cannotParticipateYourOwnRide) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+                return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
             } catch (CannotParticipateTwiceOnRide cannotParticipateTwiceOnRide) {
                 return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
             }
             rideRepository.save(ride);
-            List<Account> members = ride.getMembers();
-            return ResponseEntity.ok(members);
+            URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(account.getId()).toUri();
+            return ResponseEntity.created(location).body(account);
         } else
             return ResponseEntity.status(401).build();
     }

@@ -53,14 +53,14 @@ public class RideEndpoint {
     @GetMapping(value = "/myRides")
     public ResponseEntity<List<Ride>> getUserRides(@RequestHeader("Cookie") String cookie, HttpServletRequest httpServletRequest) {
         String sessionId = "JSESSIONID=" + httpServletRequest.getRequestedSessionId();
-        if (sessionId.equals(cookie)) {
+//        if (sessionId.equals(cookie)) {
             String email = httpServletRequest.getUserPrincipal().getName();
             List<Ride> userRides = rideRepository.findAllByAccount(accountRepository.findFirstByEmail(email));
             if (userRides != null)
                 return ResponseEntity.ok(userRides);
-        } else
+//        } else
             return ResponseEntity.status(401).build();
-        return null;
+//        return null;
     }
 
     /**
