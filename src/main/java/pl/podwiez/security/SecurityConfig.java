@@ -31,7 +31,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public BCryptPasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
     }
-// TODO - csrf disabled temporary!!!!!!
+
+    // TODO - csrf disabled temporary!!!!!!
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().authorizeRequests().antMatchers(HttpMethod.POST, "/accounts")
