@@ -31,7 +31,7 @@ public class AccountEndpoint {
 
     @PostMapping()
     public ResponseEntity<Account> addAccount(@RequestBody Account account) {
-        if (accountRepository.findFirstByEmail(account.getEmail()) != null) {
+        if (accountRepository.findFirstByEmail(account.getEmail()) == null) {
             if (account.getEmail() != null && account.getPassword() != null && !account.getEmail().isEmpty() && !account.getPassword().isEmpty()) {
                 long newAccountIdValue = idGeneratorService.generateAccountId();
                 account.setId(newAccountIdValue);
