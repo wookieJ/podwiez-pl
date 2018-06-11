@@ -14,6 +14,7 @@ import pl.podwiez.service.IdGeneratorService;
 import java.net.URI;
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/rides")
@@ -70,5 +71,22 @@ public class RideEndpoint {
         rideRepository.save(ride);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newRideIdValue).toUri();
         return ResponseEntity.created(location).body(ride);
+    }
+
+    /**
+     * Deleting ride
+     *
+     * @param id id of ride
+     * @return status code
+     */
+    @DeleteMapping(value = "/members/{memberId}")
+    public ResponseEntity deleteRideById(@PathVariable(value = "id") Long id) {
+        Ride ride = rideRepository.findFirstById(id);
+        if (ride != null) {
+            rideRepository.delete(ride);
+            return ResponseEntity.ok().build();
+        }
+
+        return ResponseEntity.notFound().build();
     }
 }
