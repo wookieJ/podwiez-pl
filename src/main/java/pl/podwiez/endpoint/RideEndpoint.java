@@ -79,7 +79,7 @@ public class RideEndpoint {
      * @param id id of ride
      * @return status code
      */
-    @DeleteMapping(value = "/members/{memberId}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity deleteRideById(@PathVariable(value = "id") Long id) {
         Ride ride = rideRepository.findFirstById(id);
         if (ride != null) {
